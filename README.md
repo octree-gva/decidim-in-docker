@@ -15,8 +15,7 @@ $ Decidim::System::Admin.create!(email: email, password: password, password_conf
 2. Run the app
 ```
 docker-compose up
-# Access the app in localhost:8080 (Nginx)
-# Rails run under a PRIVATE port 3000
+# Access localhost:3000 (The rails app)
 ```
 In the docker-compose, you can see: 
 
@@ -26,7 +25,7 @@ In the docker-compose, you can see:
 
 
 # TODOS
-
+- [ ] Proper NGinx config (actually it forces https://, not really ok for development)
 - [ ] Configuring environments for secrets and 12-factors good practices
 - [ ] Steps docker build for testing (chromium and stuff)
 - [ ] Analyse launcher from discuss and see feasibility

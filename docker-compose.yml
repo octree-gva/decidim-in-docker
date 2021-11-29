@@ -10,7 +10,7 @@ services:
     depends_on:
       - app
     ports:
-      - "8080:80"
+      - "3013:80"
     networks:
       - private
       - default
@@ -29,10 +29,12 @@ services:
       - PORT=3000
       - RAILS_MAX_THREAD=5
       - RAILS_FORCE_SSL=false
+      - RAILS_SERVE_STATIC_FILES=true # FIXME: never do that. 
     ports:
       - 3000:3000
     networks:
       - private
+      - default # FIXME: never do this.
     depends_on:
       - pg
 
