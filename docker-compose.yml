@@ -6,13 +6,11 @@ services:
     volumes:
       - ./public:/public:ro
       - .docker/nginx.http.conf:/etc/nginx/conf.d/default.conf
-
     working_dir: /public
     depends_on:
       - app
     ports:
       - "8080:80"
-
     networks:
       - private
       - default
@@ -24,12 +22,13 @@ services:
     volumes:
       - .:/home/decidim/app # or whatever is your workdir
     environment:
-      - DB_HOST=pg
-      - DB_USER=postgres
-      - DB_PASSWORD=my-insecure-pw
+      - DATABASE_HOST=pg
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=my-insecure-pw
       - RAILS_ENV=production
       - PORT=3000
       - RAILS_MAX_THREAD=5
+      - RAILS_FORCE_SSL=false
     ports:
       - 3000:3000
     networks:

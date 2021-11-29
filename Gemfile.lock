@@ -462,6 +462,7 @@ GEM
       actionmailer (>= 3.2)
       letter_opener (~> 1.0)
       railties (>= 3.2)
+    libv8-node (16.10.0.0-x86_64-linux-musl)
     listen (3.5.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -485,6 +486,8 @@ GEM
     mini_magick (4.11.0)
     mini_mime (1.1.1)
     mini_portile2 (2.5.3)
+    mini_racer (0.5.0)
+      libv8-node (~> 16.10.0.0)
     minitest (5.14.4)
     mixlib-cli (2.1.8)
     mixlib-config (3.0.9)
@@ -784,6 +787,7 @@ DEPENDENCIES
   faker (~> 2.14)
   letter_opener_web (~> 1.3)
   listen (~> 3.1)
+  mini_racer
   puma (>= 5.0.0)
   spring (~> 2.0)
   spring-watcher-listen (~> 2.0)
@@ -791,7 +795,7 @@ DEPENDENCIES
   wicked_pdf (~> 2.1)
 
 RUBY VERSION
-   ruby 2.7.2p137
+   ruby 2.7.3p183
 
 BUNDLED WITH
-   2.2.18
+   2.2.22

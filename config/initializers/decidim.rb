@@ -30,7 +30,7 @@ Decidim.configure do |config|
   # config.content_processors = []
 
   # Whether SSL should be enabled or not.
-  # config.force_ssl = true
+  config.force_ssl = ["true", "1", "enabled"].include? ENV.fetch("RAILS_FORCE_SSL", "false")
 
   # Map and Geocoder configuration
   #

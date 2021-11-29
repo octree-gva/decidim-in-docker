@@ -105,7 +105,7 @@ RUN bundle config set without 'development test' && \
 COPY . ./
 
 # Pre-compile assets
-RUN source $NVM_DIR/nvm.sh; nvm use $NODE_VERSION && \
+RUN source $NVM_DIR/nvm.sh; nvm use $NODE_VERSION; npm install -g yarn && yarn &&  \
     SECRET_KEY_BASE=assets bundle exec rails assets:precompile
     
 ########################################################################
