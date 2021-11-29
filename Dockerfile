@@ -2,10 +2,10 @@
 # ===
 # This image is not suited for a development environment.
 # The build is done in 3 steps:
-#   2. Dependancy: a heavier image to build assets and native gems
-#   3. Final: will take results of dependancy to serve a small and minimal image.
+#   2. Dependency: a stage image to build assets and native gems
+#   3. Final: will take results of dependency to serve a small and minimal image.
 # 
-# The idea behind this process is to expose in the deployed image as few as possible dependancies.
+# The idea behind this process is to expose in the deployed image as few as possible dependencies.
 # Reducing this way the number of security issues.
 # 
 # Arguments
@@ -25,11 +25,11 @@
 #
 # Volumes
 # ===
-# Some volumes will be mapped by defaults:
-#   * storage
-#   * public
-#   * log
-#   * ../vendor: to cache gems
+# Some volumes will be mapped by default:
+#   * storage/
+#   * public/
+#   * log/
+#   * ../vendor/: to cache gems
 ARG ALPINE_RUBY_VERSION=2.7.3
 ARG BUNDLER_VERSION=2.2.22
 ARG NODE_VERSION=v16.13.0 # Should exists for alpine, see https://unofficial-builds.nodejs.org/download/release/
@@ -39,9 +39,9 @@ ARG GROUP=admin
 ARG GROUP_UID=1000
 
 ########################################################################
-# Dependancy layer
+# Dependency layer
 ########################################################################
-FROM ruby:${ALPINE_RUBY_VERSION}-alpine  AS dependancy
+FROM ruby:${ALPINE_RUBY_VERSION}-alpine AS dependency
 ARG BUNDLER_VERSION
 ARG NODE_VERSION
 ARG USER
@@ -74,8 +74,6 @@ RUN mkdir -p $NVM_DIR
 # - bash curl: to download nvm and install it
 # - libstdc++: to build NVM
 RUN apk update && apk upgrade && \
-    gem update --system && \
-    gem install bundler --version "$BUNDLER_VERSION" && \
     apk --update --no-cache add \
         build-base \
         tzdata \
@@ -84,8 +82,9 @@ RUN apk update && apk upgrade && \
         imagemagick \
         git \
         bash curl \
-        libstdc++ \
-        && rm -rf /var/cache/apk/*
+        libstdc++
+RUN gem update --system --quiet && \
+    gem install --quiet bundler --version "$BUNDLER_VERSION"
 
 # Install nvm, to have the approriate node version to compile assets
 RUN touch $RAILS_ROOT/.profile && \
@@ -99,14 +98,15 @@ COPY Gemfile Gemfile.lock ./
 
 # Configure bundler path, and install gems if needed (dev, test and production)
 RUN bundle config set without 'development test' && \
-    bundle install && \
+    bundle install --quiet && \
     rm -rf /usr/local/bundle/cache/ /usr/local/bundle/bundler/gems/*/.git
 
 COPY . ./
 
 # Pre-compile assets
 RUN source $NVM_DIR/nvm.sh; nvm use $NODE_VERSION; npm install -g yarn && yarn &&  \
-    SECRET_KEY_BASE=assets bundle exec rails assets:precompile
+    SECRET_KEY_BASE=assets bundle exec rails assets:precompile && \
+    rm -rf node_modules
     
 ########################################################################
 # Final layer
@@ -138,8 +138,6 @@ WORKDIR $RAILS_ROOT
 
 RUN apk update && \
     apk upgrade && \
-    gem update --system && \
-    gem install bundler --version "$BUNDLER_VERSION" && \
     apk add --no-cache \
         postgresql-dev \
         tzdata \
@@ -147,6 +145,8 @@ RUN apk update && \
         bash \
         vim \
         && rm -rf /var/cache/apk/*
+RUN gem update --system --quiet && \
+    gem install bundler --quiet --version "$BUNDLER_VERSION" 
 
 # Create system user to run as non-root.
 RUN addgroup -S $GROUP -g $GROUP_UID && \
@@ -157,8 +157,8 @@ VOLUME /home/$USER/app/public
 VOLUME /home/$USER/app/log
 
 # Copy app & gems
-COPY --from=dependancy /usr/local/bundle/ /usr/local/bundle/
-COPY --chown=$USER:$GROUP --from=dependancy /home/$USER/app ./
+COPY --from=dependency /usr/local/bundle/ /usr/local/bundle/
+COPY --chown=$USER:$GROUP --from=dependency /home/$USER/app ./
 
 # Add imagemagick policy
 RUN mv $RAILS_ROOT/.docker/imagemagick-policy.xml /etc/ImageMagick-7/policy.xml && \
