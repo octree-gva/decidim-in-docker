@@ -10,7 +10,7 @@ fi
 # Wait for postgres to be available for connections
 $RAILS_ROOT/bin/wait-for-it.sh -h ${DATABASE_HOST:-db} -p ${DATABASE_PORT:-5432}
 
-# Check gems, productions ones should be set
+# Check gems, production ones should be set
 bundle check
 
 echo "Running '$@'"
