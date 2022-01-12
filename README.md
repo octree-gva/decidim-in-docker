@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/octree-gva/meta/main/decidim/static/octree_and_decidim.svg" height="90" alt="Decidim Research & Development by Octree" />
+    <img src="https://raw.githubusercontent.com/octree-gva/meta/main/decidim/static/octree_and_decidim.png" height="90" alt="Decidim Research & Development by Octree" />
 </p>
 <h3 align="center">
     <strong>Decidim In Docker</strong><br />
@@ -57,7 +57,7 @@ an application for production, with a rails app and database in a private networ
 <br /><br />
 
 # License
-<img src="https://raw.githubusercontent.com/octree-gva/meta/main/decidim/static/decidim_licence.svg" width="120"><br /><br />
+<img src="https://raw.githubusercontent.com/octree-gva/meta/main/decidim/static/decidim_licence.png" width="120"><br /><br />
 This repository is released under [AGPL-V3](https://choosealicense.com/licenses/agpl-3.0/). 
 
 <br /><br /><br /><br />
